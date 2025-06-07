@@ -1,0 +1,34 @@
+﻿<SfToast @ref="ToastObj"
+         CssClass="@Options.CssClass"
+         Icon="@Options.Icon"
+         EnableRtl="@Options.EnableRtl"
+         Timeout="@Options.Timeout"
+         ShowCloseButton="@Options.ShowCloseButton"
+         ShowProgressBar="@Options.ShowProgressBar"
+         Title="@Options.Title"
+         Content="@Options.Content">
+    <ToastPosition X="Left"></ToastPosition>
+</SfToast>
+@code {
+    private SfToast ToastObj;
+
+    private bool RenderToast { get; set; } = false;
+
+    // Parameter
+    private ToastOptions Options = new ToastOptions();
+
+    protected override void OnInitialized()
+    {
+        ToastServices.ToastInstance += (ToastOptions _options) =>
+        {
+            InvokeAsync(async () =>
+            {
+                await Task.Delay(1);
+                Options = _options;
+                this.RenderToast = true;
+                this.StateHasChanged();
+                await this.ToastObj.ShowAsync();
+            });
+        };
+    }
+} 
